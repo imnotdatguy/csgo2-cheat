@@ -30,10 +30,17 @@ void menu::render()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(800.f, 400.f));
 
-	if (ImGui::Begin("csgo2", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+	if (ImGui::Begin("https://github.com/imnotdatguy/csgo2-cheat | CSGO 2 Cheat", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
 	{
 		if (ImGui::BeginTabBar("##features"))
 		{
+			if (ImGui::BeginTabItem("combat"))
+			{
+				ImGui::Checkbox("aimbot", &config::context.aimbot);
+				ImGui::SliderFloat("fov", &config::context.aimbot_fov, 1.f, 60.f, "%.2f");
+				ImGui::EndTabItem();
+			}
+
 			if (ImGui::BeginTabItem("player esp"))
 			{
 				ImGui::Checkbox("players", &config::context.player_esp);

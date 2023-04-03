@@ -4,6 +4,7 @@
 
 #include "../schema_system/schema_system.hpp"
 #include "../math/vec3_t.hpp"
+#include "skeleton.hpp"
 
 enum buttons_t : std::uint32_t
 {
@@ -84,6 +85,7 @@ class game_scene_node_t
 public:
     SCHEMA("CGameSceneNode", "m_vecAbsOrigin", abs_origin, vec3_t);
     SCHEMA("CGameSceneNode", "m_vecOrigin", vec_origin, vec3_t);
+    SCHEMA("CGameSceneNode", "m_bDormant", dormant, bool);
 };
 
 class collision_property_t
@@ -125,7 +127,6 @@ class entity_t
 public:
     SCHEMA("C_BaseEntity", "m_pGameSceneNode", game_scene_node, game_scene_node_t*);
     SCHEMA("C_BaseEntity", "m_pCollision", collision_property, collision_property_t*);
-
     SCHEMA("C_BaseEntity", "m_hOwnerEntity", owner_handle, unsigned long);
     SCHEMA("C_BaseEntity", "m_flSimulationTime", simulation_time, float);
 };
@@ -138,6 +139,18 @@ public:
     SCHEMA("C_CSPlayerPawnBase", "m_bGunGameImmunity", has_gun_immunity, bool);
     SCHEMA("C_BaseEntity", "m_iHealth", health, std::int32_t);
     SCHEMA("C_BaseEntity", "m_iTeamNum", team, std::uint8_t);
+    SCHEMA("C_BaseModelEntity", "m_vecViewOffset", view_offset, vec3_t);
+
+    vec3_t get_eye_pos()
+    {
+        return this->game_scene_node()->vec_origin() + this->view_offset();
+    }
+
+    vec3_t get_bone_position(std::int32_t bone)
+    {
+        skeleton_t* skeleton = *reinterpret_cast<skeleton_t**>((std::uintptr_t)this + 0x300);
+        return vec3_t(skeleton->bone_matrix[bone].m21, skeleton->bone_matrix[bone].m22, skeleton->bone_matrix[bone].m23);
+    }
 
     bool is_alive()
     {
