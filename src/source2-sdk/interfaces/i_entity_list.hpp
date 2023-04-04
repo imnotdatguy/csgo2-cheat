@@ -30,4 +30,10 @@ public:
 
 		return static_cast<player_t*>(fn(0));
 	}
+
+	controller_t* get_local_controller()
+	{
+		static controller_t* controller = reinterpret_cast<controller_t*>(utilities::resolve_rip(utilities::pattern_scan(L"client.dll", GET_LOCAL_CONTROLLER), 2, 6));
+		return controller;
+	}
 };
